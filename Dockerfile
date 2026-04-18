@@ -8,7 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /
 
 # Copy requirements and install
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Ensure pip, setuptools and wheel are present/up-to-date so pkg_resources exists for gunicorn
+RUN python -m pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy app
 COPY . .
