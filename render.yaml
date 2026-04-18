@@ -5,11 +5,11 @@ services:
   - type: web
     name: fetchmatchdata
     env: docker
-    plan: standard-1
+    plan: standard
     repo: <YOUR_GIT_REPO_URL>
     branch: main
     buildCommand: ""
-    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT --workers 2"
+    startCommand: bash scripts/start.sh
     envVars:
       - key: FOOTBALL_DATA_API_KEY
         sync: false

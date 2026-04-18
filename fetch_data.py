@@ -3,7 +3,9 @@ import time
 import os
 
 # Constants
-API_KEY = os.getenv('FOOTBALL_DATA_API_KEY', 'c565137f0689452ca211e2ae468c8693')
+API_KEY = os.getenv('FOOTBALL_DATA_API_KEY')
+if not API_KEY:
+    raise RuntimeError('FOOTBALL_DATA_API_KEY environment variable is required. Set it in your deployment environment (Render/Heroku/Azure).')
 BASE_URL = 'https://api.football-data.org/v4/'
 CACHE_TIME = 300  # Cache duration in seconds (5 minutes)
 
