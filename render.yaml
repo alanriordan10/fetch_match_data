@@ -1,0 +1,17 @@
+# Render service definition for deploying via Render.yaml
+# See https://render.com/docs/deploy-a-web-service#render-yaml for details
+
+services:
+  - type: web
+    name: fetchmatchdata
+    env: docker
+    plan: standard-1
+    repo: <YOUR_GIT_REPO_URL>
+    branch: main
+    buildCommand: ""
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT --workers 2"
+    envVars:
+      - key: FOOTBALL_DATA_API_KEY
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true
