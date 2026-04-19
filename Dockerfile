@@ -22,5 +22,6 @@ COPY . .
 # Expose port (Render provides $PORT at runtime)
 EXPOSE 8000
 
-# Use Gunicorn with Uvicorn workers; bind to Render's $PORT env var at runtime
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--log-level", "info"]
+# Use Gunicorn with Uvicorn workers; run via a shell so Render's $PORT and other env vars are expanded.
+# Provide sensible defaults if the environment variables are not set.
+CMD ["sh", "-c", "exec gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:${PORT:-8000} --workers ${WEB_CONCURRENCY:-2} --log-level info"]
