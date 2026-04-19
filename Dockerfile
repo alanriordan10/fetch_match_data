@@ -9,9 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /
 # Copy requirements and install
 COPY requirements.txt ./
 
-# Ensure pip, setuptools and wheel are present/up-to-date so pkg_resources exists for gunicorn
-RUN python -m pip install --upgrade pip setuptools wheel && \
-    python -m pip install --no-cache-dir -r requirements.txt
+# Ensure pip, wheel and a known setuptools are present/installed into the same interpreter
+# Install a pinned setuptools first (strong guarantee pkg_resources will be available),
+# then install the rest of the requirements and verify pkg_resources can be imported.
+RUN python -m pip install --upgrade pip wheel setuptools==68.0.0 && \
+    python -m pip install --no-cache-dir -r requirements.txt && \
+    python -c "import pkg_resources; print('pkg_resources ok:', pkg_resources.__file__)"
 
 # Copy app
 COPY . .
